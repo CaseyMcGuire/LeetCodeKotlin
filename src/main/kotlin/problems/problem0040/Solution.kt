@@ -22,4 +22,27 @@ class Solution {
     findSums(0, mutableListOf())
     return sums.map { it.sorted() }.toSet().toList()
   }
+
+  fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+    val sortedCandidates = candidates.sorted()
+    val sums = mutableListOf<List<Int>>()
+    fun findSums(index: Int, currentSum: Int, currentList: MutableList<Int>) {
+      if (currentSum == target) {
+        sums.add(currentList.toList())
+        return
+      }
+      if (index >= sortedCandidates.size || currentSum > target) {
+        return
+      }
+      val currentNum = sortedCandidates[index]
+      currentList.add(currentNum)
+      findSums(index, currentSum + currentNum, currentList)
+      findSums(index + 1, currentSum + currentNum, currentList)
+      currentList.removeAt(currentList.size - 1)
+      findSums(index + 1, currentSum, currentList)
+    }
+    findSums(0, 0, mutableListOf())
+    return sums.map { it.sorted() }.toSet().toList()
+  }
+
 }
