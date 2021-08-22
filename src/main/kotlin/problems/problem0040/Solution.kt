@@ -1,48 +1,28 @@
 package problems.problem0040
 
-import java.util.*
-
 class Solution {
-  fun combinationSum(candidates: IntArray, target: Int): List<List<Int>> {
-    val candidateTree = TreeSet<Int>(candidates.toList())
-    val sums = mutableListOf<List<Int>>()
-    fun findSums(currentSum: Int, currentList: MutableList<Int>) {
+  fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+    val currentCombinations = mutableListOf<List<Int>>()
+    candidates.sort()
+    fun dfs(index: Int, currentList: MutableList<Int>, currentSum: Int) {
       if (currentSum == target) {
-        sums.add(currentList.toList())
+        currentCombinations.add(ArrayList(currentList))
         return
       }
-      val remaining = target - currentSum
-      val smallerElements = candidateTree.headSet(remaining, true)
-      smallerElements.forEach {
-        currentList.add(it)
-        findSums(currentSum + it,currentList)
+      else if (index >= candidates.size || currentSum > target) {
+        return
+      }
+      for (i in index until candidates.size) {
+        // I don't know why this works
+        if (i != index && candidates[i] == candidates[i - 1]) {
+          continue
+        }
+        currentList.add(candidates[i])
+        dfs(i + 1, currentList, currentSum + candidates[i])
         currentList.removeAt(currentList.size - 1)
       }
     }
-    findSums(0, mutableListOf())
-    return sums.map { it.sorted() }.toSet().toList()
+    dfs(0, mutableListOf(), 0)
+    return currentCombinations.map { it.sorted() }.toSet().toList()
   }
-
-  fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
-    val sortedCandidates = candidates.sorted()
-    val sums = mutableListOf<List<Int>>()
-    fun findSums(index: Int, currentSum: Int, currentList: MutableList<Int>) {
-      if (currentSum == target) {
-        sums.add(currentList.toList())
-        return
-      }
-      if (index >= sortedCandidates.size || currentSum > target) {
-        return
-      }
-      val currentNum = sortedCandidates[index]
-      currentList.add(currentNum)
-      findSums(index, currentSum + currentNum, currentList)
-      findSums(index + 1, currentSum + currentNum, currentList)
-      currentList.removeAt(currentList.size - 1)
-      findSums(index + 1, currentSum, currentList)
-    }
-    findSums(0, 0, mutableListOf())
-    return sums.map { it.sorted() }.toSet().toList()
-  }
-
 }
