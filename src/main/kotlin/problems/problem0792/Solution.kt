@@ -1,4 +1,4 @@
-package problems.problem792
+package problems.problem0792
 
 class Solution {
   fun numMatchingSubseq(s: String, words: Array<String>): Int {
