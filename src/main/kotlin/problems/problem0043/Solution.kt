@@ -43,8 +43,6 @@ class Solution {
 
     var newSum = "0"
     for (sum in sums) {
-      println("sum $sum")
-      println("newSum $newSum")
       newSum = add(newSum, sum)
     }
 
@@ -88,7 +86,6 @@ class Solution {
     if (remainder != 0) {
       sumList.addFirst(remainder)
     }
-    println(sumList)
     return sumList.joinToString("")
   }
 }
