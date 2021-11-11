@@ -6,33 +6,16 @@ class Solution {
     var end = nums.size - 1
     var i = 0
     while (i <= end) {
-      if (i < start) {
-        i = start
-      }
-      else if (nums[i] == 0 && nums[start] == 0) {
+      if (nums[i] == 0) {
+        nums.swap(i, start)
         i++
         start++
       }
-      else if (nums[i] == 0) {
-        nums.swap(i, start)
-        start++
-      }
-      else if (nums[end] == 2) {
-        end--
-      }
       else if (nums[i] == 2) {
         nums.swap(i, end)
         end--
       }
-      else if (nums[end] == 0) {
-        nums.swap(start, end)
-        start++
-      }
-      else if (nums[i] == 2) {
-        nums.swap(i, end)
-        end--
-      }
-      else if (nums[end] == 1 && nums[i] == 1) {
+      else {
         i++
       }
     }
