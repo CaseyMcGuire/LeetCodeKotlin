@@ -1,4 +1,4 @@
-package problems.problem01533
+package problems.problem1533
 
 interface ArrayReader {
   // Compares the sum of arr[l..r] with the sum of arr[x..y]
