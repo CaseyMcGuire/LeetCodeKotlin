@@ -1,5 +1,7 @@
 package problems.problem1135
 
+import java.util.*
+
 class Solution {
   fun minimumCost(n: Int, connections: Array<IntArray>): Int {
     if (n == 1) {
