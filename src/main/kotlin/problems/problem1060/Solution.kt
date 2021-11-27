@@ -20,10 +20,6 @@ class Solution {
     while (low <= high) {
       val mid = ((low.toLong() + high.toLong()) / 2L).toInt()
       val found = k in gaps[mid]..gaps[mid + 1]
-      val foo = gaps[high]
-      val bar = gaps[low]
-      val baz = gaps[mid]
-      var qux = gaps[mid + 1]
       val difference = high - low
       if (difference < 10) {
         break
