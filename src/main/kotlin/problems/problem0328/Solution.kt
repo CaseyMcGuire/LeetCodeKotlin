@@ -19,7 +19,7 @@ class Solution {
     while (true) {
       curOdd?.next = curOdd?.next?.next
       curEven?.next = curEven?.next?.next
-      if (curEven.next == null) {
+      if (curEven?.next == null) {
         if (curOdd?.next != null) {
           curOdd = curOdd?.next
         }
