@@ -7,7 +7,6 @@ class Solution {
       if (nums[i] != 0) {
         nums[pointer] = nums[i]
         if (pointer != i) {
-          println("hello")
           nums[i] = 0
         }
         pointer++
