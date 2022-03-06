@@ -2,7 +2,7 @@ package problems.problem0336
 
 class Solution {
   // O(N * k^2) where N is the length of the array and k is the length of the longest string
-  // This is a difficult problem...
+  // This is a difficult problem... Even this solution times out sometimes
   fun palindromePairs(words: Array<String>): List<List<Int>> {
     val wordsToIndex = mutableMapOf<String, Int>()
     val pairs = mutableSetOf<List<Int>>()
