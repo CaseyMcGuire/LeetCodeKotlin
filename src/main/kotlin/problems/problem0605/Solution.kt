@@ -6,7 +6,7 @@ class Solution {
     var numPlacements = 0
     while (i < flowerbed.size) {
       if (flowerbed[i] == 0 &&
-        (flowerbed.getOrN605ull(i - 1) ?: 0) == 0 &&
+        (flowerbed.getOrNull(i - 1) ?: 0) == 0 &&
         (flowerbed.getOrNull(i + 1) ?: 0) == 0) {
         numPlacements++
         i += 2
