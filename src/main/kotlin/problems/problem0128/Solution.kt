@@ -2,25 +2,27 @@ package problems.problem0128
 
 class Solution {
   fun longestConsecutive(nums: IntArray): Int {
-    if (nums.isEmpty()) {
-      return 0
-    }
     val numSet = mutableSetOf<Int>()
     for (num in nums) {
       numSet.add(num)
     }
 
-    val visited = mutableSetOf<Int>()
-    fun recurse(num: Int): Int {
-      if (visited.contains(num)) {
-        return 0
+
+    var longestSoFar = 0
+    for (num in numSet) {
+      if (numSet.contains(num - 1)) {
+        continue
       }
-      if (!numSet.contains(num)) {
-        return 0
+
+      var curLength = 1
+      var curNum = num + 1
+      while (numSet.contains(curNum)) {
+        curLength++
+        curNum++
       }
-      visited.add(num)
-      return 1 + recurse(num - 1) + recurse(num + 1)
+
+      longestSoFar = Math.max(curLength, longestSoFar)
     }
-    return nums.map { recurse(it) }.max()!!
+    return longestSoFar
   }
 }
