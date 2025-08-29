@@ -4,89 +4,69 @@ import java.util.*
 
 class Solution {
   fun medianSlidingWindow(nums: IntArray, k: Int): DoubleArray {
-    if (k == 1) {
-      return nums.map { it.toDouble() }.toDoubleArray()
-    }
-    val leftWindow = FrequencyMap()
-    val rightWindow = FrequencyMap()
-    for (i in 0 until k) {
-      rightWindow.increment(nums[i])
-    }
+    val medians = mutableListOf<Double>()
+    val slidingWindow = SlidingWindow()
+    for (i in nums.indices) {
+      val element = Element(nums[i], i)
+      slidingWindow.add(element)
+      if (slidingWindow.size() > k) {
+        val elementToRemove = Element(nums[i - k], i - k)
+        slidingWindow.remove(elementToRemove)
+      }
 
-    fun rebalance() {
-      while (rightWindow.size - leftWindow.size > 1) {
-        val first = rightWindow.first()
-        rightWindow.decrement(first)
-        leftWindow.increment(first)
-      }
-      while (rightWindow.first() < leftWindow.last()) {
-        val first = rightWindow.first()
-        val last = leftWindow.last()
-        rightWindow.decrement(first)
-        rightWindow.increment(last)
-        leftWindow.decrement(last)
-        leftWindow.increment(first)
+      if (slidingWindow.size() == k) {
+        medians.add(slidingWindow.getMedian())
       }
     }
+    return medians.toDoubleArray()
+  }
+}
+
+class SlidingWindow {
+  private val smallerHalf = TreeSet<Element>(compareBy({ it.value }, { it.index }))
+  private val largerHalf = TreeSet<Element>(compareBy({ it.value }, { it.index }))
+
+  fun add(element: Element) {
+    largerHalf.add(element)
     rebalance()
-    val medians = DoubleArray(nums.size - k + 1)
-    medians[0] = calculateMedian(leftWindow, rightWindow)
-    var resultIndex = 1
-    for (i in k until nums.size) {
-      if (!leftWindow.decrement(nums[i - k])) {
-        rightWindow.decrement(nums[i - k])
-      }
-
-      rightWindow.increment(nums[i])
-      rebalance()
-      medians[resultIndex] = calculateMedian(leftWindow, rightWindow)
-      resultIndex++
-    }
-
-    return medians
   }
 
-  private fun calculateMedian(left: FrequencyMap, right: FrequencyMap): Double {
-    val totalSize = left.size + right.size
-    if (totalSize % 2 == 1) {
-      return right.first().toDouble()
+  fun remove(element: Element) {
+    smallerHalf.remove(element)
+    largerHalf.remove(element)
+    rebalance()
+  }
+
+  private fun rebalance() {
+    while (smallerHalf.size < largerHalf.size) {
+      smallerHalf.add(largerHalf.pollFirst())
+    }
+
+    while (smallerHalf.size - largerHalf.size > 1) {
+      largerHalf.add(smallerHalf.pollLast())
+    }
+
+    if (largerHalf.isNotEmpty() && smallerHalf.last().value > largerHalf.first().value) {
+      val first = largerHalf.pollFirst()
+      val last = smallerHalf.pollLast()
+      largerHalf.add(last)
+      smallerHalf.add(first)
+    }
+  }
+
+  fun size(): Int {
+    return smallerHalf.size + largerHalf.size
+  }
+
+  fun getMedian(): Double {
+    val size = smallerHalf.size + largerHalf.size
+    if (size % 2 == 1) {
+      return smallerHalf.last().value.toDouble()
     }
     else {
-      return (right.first().toDouble() + left.last().toDouble()) / 2.0
+      return (smallerHalf.last().value.toDouble() + largerHalf.first().value.toDouble()) / 2.0
     }
   }
 }
 
-class FrequencyMap() {
-  val map = TreeMap<Int, Int>()
-  var size = 0
-
-  fun increment(num: Int) {
-    this.map.merge(num, 1) { cur, acc -> cur + acc }
-    size++
-  }
-
-  fun decrement(num: Int): Boolean {
-    val currentFrequency = this.map[num] ?: return false
-    if (currentFrequency == 1) {
-      this.map.remove(num)
-    }
-    else {
-      map[num] = currentFrequency - 1
-    }
-    this.size--
-    return true
-  }
-
-  fun first(): Int {
-    return map.firstKey()
-  }
-
-  fun last(): Int {
-    return map.lastKey()
-  }
-
-  override fun toString(): String {
-    return map.toString()
-  }
-}
+data class Element(val value: Int, val index: Int)
