@@ -8,21 +8,35 @@ class Solution {
     for (i in startTime.indices) {
       jobs.add(Job(startTime[i], endTime[i], profit[i]))
     }
-    jobs.sortBy { it.start }
+
+    jobs.sortBy { it.startTime }
+
     val startTimeToMaxProfit = TreeMap<Int, Int>()
-    var largestSoFar = 0
+
+    var maxProfitSoFar = 0
+
     for (i in jobs.indices.reversed()) {
       val curJob = jobs[i]
-      var curProfit = curJob.profit
-      val maxProfitsAhead = startTimeToMaxProfit.tailMap(curJob.end, true)
-      if (maxProfitsAhead.isNotEmpty()) {
-        curProfit += maxProfitsAhead.firstEntry().value
+
+      // get the next job that starts after this one ends
+      val highestProfitIncludingThisJob = startTimeToMaxProfit.higherEntry(curJob.endTime - 1)
+      val profit = if (highestProfitIncludingThisJob == null) {
+        curJob.profit
       }
-      largestSoFar = Math.max(largestSoFar, curProfit)
-      startTimeToMaxProfit[curJob.start] = largestSoFar
+      else {
+        curJob.profit + highestProfitIncludingThisJob.value
+      }
+
+      val nextJobStartTime = jobs.getOrNull(i + 1)?.startTime ?: -1
+      val profitNotIncludingJob = startTimeToMaxProfit[nextJobStartTime] ?: 0
+      val maxProfit = Math.max(profitNotIncludingJob, profit)
+      maxProfitSoFar = Math.max(maxProfit, maxProfitSoFar)
+
+      val existingMaxProfit = startTimeToMaxProfit[curJob.startTime] ?: 0
+      startTimeToMaxProfit[curJob.startTime] = Math.max(maxProfit, existingMaxProfit)
     }
-    return largestSoFar
+    return maxProfitSoFar
   }
 }
 
-data class Job(val start: Int, val end: Int, val profit: Int)
+data class Job(val startTime: Int, val endTime: Int, val profit: Int)
