@@ -4,42 +4,17 @@ import java.util.*
 
 class Solution {
   fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
-    if (k == 0) {
-      return emptyList()
-    }
+    val pq = PriorityQueue<Int>(compareByDescending({ Math.abs(it - x) }))
 
-    val closestElements = mutableListOf<Int>()
-    val lessThan = PriorityQueue<Int>(compareBy({ -it }))
-    val greaterThan = PriorityQueue<Int>(compareBy({ it }))
-    for (elem in arr) {
-      if (elem < x) {
-        lessThan.add(elem)
+    for (num in arr) {
+      if (pq.size < k) {
+        pq.add(num)
       }
-      else {
-        greaterThan.add(elem)
+      else if (Math.abs(pq.peek() - x) > Math.abs(num - x)) {
+        pq.poll()
+        pq.add(num)
       }
     }
-
-    while (k > closestElements.size && (lessThan.isNotEmpty() || greaterThan.isNotEmpty())) {
-      val element = if (lessThan.isEmpty()) {
-        greaterThan.poll()
-      }
-      else if (greaterThan.isEmpty()) {
-        lessThan.poll()
-      }
-      else {
-        val lessDifference = Math.abs(lessThan.peek() - x)
-        val greaterDifference = Math.abs(greaterThan.peek() - x)
-        if (lessDifference <= greaterDifference) {
-          lessThan.poll()
-        }
-        else {
-          greaterThan.poll()
-        }
-      }
-      closestElements.add(element)
-    }
-
-    return closestElements.sorted()
+    return pq.toList().sorted()
   }
 }
