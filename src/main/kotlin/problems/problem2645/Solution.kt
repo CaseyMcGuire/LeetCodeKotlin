@@ -2,38 +2,25 @@ package problems.problem2645
 
 class Solution {
   fun addMinimum(word: String): Int {
-    var additions = 0
-    if (word.first() == 'b') {
-      additions++
-    }
-    else if (word.first() == 'c') {
-      additions += 2
-    }
-
-    for (i in 1 until word.length) {
-      if (word[i] == word[i - 1]) {
-        additions += 2
+    var i = 0
+    var j = 0
+    val validWord = "abc"
+    var numAdditions = 0
+    while (i < word.length) {
+      if (word[i] != validWord[j]) {
+        numAdditions++
       }
-      else if (word[i] != word[i - 1].getNextChar()) {
-        additions++
+      else {
+        i++
+      }
+      j++
+      if (j == validWord.length) {
+        j = 0
       }
     }
-
-    if (word.last() == 'b') {
-      additions++
+    if (j != 0) {
+      numAdditions += (validWord.length - j)
     }
-    else if (word.last() == 'a') {
-      additions += 2
-    }
-
-    return additions
-  }
-  private fun Char.getNextChar(): Char {
-    return when(this) {
-      'a' -> 'b'
-      'b' -> 'c'
-      'c' -> 'a'
-      else -> throw IllegalStateException("Invalid character: $this")
-    }
+    return numAdditions
   }
 }
