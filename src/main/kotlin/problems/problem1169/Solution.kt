@@ -6,7 +6,6 @@ class Solution {
     val transactions = stringTransactions.map { Transaction.fromString(it) }
       .sortedBy { it.time }
 
-    println(transactions)
     val nameToCityToTransaction = mutableMapOf<String, MutableMap<String, MutableSet<Transaction>>>()
     val transactionsInTimeWindow = ArrayDeque<Transaction>()
 
