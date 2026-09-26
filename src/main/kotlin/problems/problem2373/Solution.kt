@@ -5,7 +5,6 @@ class Solution {
     val matrix = Array(grid.size - 2) { IntArray(grid.size - 2) }
     for (i in 1 until grid.size - 1) {
       for (j in 1 until grid[i].size - 1) {
-        var largest = grid[i][j]
         matrix[i - 1][j - 1] = grid.largestAround(i, j)
       }
     }
