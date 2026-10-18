@@ -2,9 +2,9 @@ package problems.problem0707
 
 class MyLinkedList() {
 
-  var size = 0
-  var head: ListNode? = null
-  var tail: ListNode? = null
+  private var size = 0
+  private var head: ListNode? = null
+  private var tail: ListNode? = null
 
   fun get(index: Int): Int {
     if (index !in 0 until size) {
@@ -56,6 +56,10 @@ class MyLinkedList() {
   }
 
   fun addAtIndex(index: Int, value: Int) {
+    if (index !in 0..size) {
+      return
+    }
+
     if (index == 0) {
       addAtHead(value)
     }
